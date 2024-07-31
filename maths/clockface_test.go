@@ -17,9 +17,12 @@ func TestSecondHandPoint(t *testing.T) {
 		{simpleTime(0, 0, 45), Point{-1, 0}},
 	}
 
-	for _, test := range cases {
-		t.Run(testName(test.time), func(t *testing.T) {
-			assertEqual(t, SecondHandPoint(test.time), test.point)
+	for _, c := range cases {
+		t.Run(testName(c.time), func(t *testing.T) {
+			got := SecondHandPoint(c.time)
+			if !roughlyEqualPoint(got, c.point) {
+				t.Fatalf("Wanted %v Point, but got %v", c.point, got)
+			}
 		})
 	}
 }
@@ -27,34 +30,37 @@ func TestSecondHandPoint(t *testing.T) {
 func TestSecondHand(t *testing.T) {
 	cases := []struct {
 		description string
-		seconds     time.Time
-		want        Point
+		time        time.Time
+		point       Point
 	}{
 		{
 			description: "at 0 seconds",
-			seconds:     simpleTime(0, 0, 0),
-			want:        Point{X: 150, Y: 150 - SecondsHandLength},
+			time:        simpleTime(0, 0, 0),
+			point:       Point{X: 150, Y: 150 - SecondsHandLength},
 		},
 		{
 			description: "at 15 seconds",
-			seconds:     simpleTime(0, 0, 15),
-			want:        Point{X: 150 + SecondsHandLength, Y: 150},
+			time:        simpleTime(0, 0, 15),
+			point:       Point{X: 150 + SecondsHandLength, Y: 150},
 		},
 		{
 			description: "at 30 seconds",
-			seconds:     simpleTime(0, 0, 30),
-			want:        Point{X: 150, Y: 150 + SecondsHandLength},
+			time:        simpleTime(0, 0, 30),
+			point:       Point{X: 150, Y: 150 + SecondsHandLength},
 		},
 		{
 			description: "at 45 seconds",
-			seconds:     simpleTime(0, 0, 45),
-			want:        Point{X: 150 - SecondsHandLength, Y: 150},
+			time:        simpleTime(0, 0, 45),
+			point:       Point{X: 150 - SecondsHandLength, Y: 150},
 		},
 	}
 
-	for _, test := range cases {
-		t.Run(test.description, func(t *testing.T) {
-			assertEqual(t, SecondHand(test.seconds), test.want)
+	for _, c := range cases {
+		t.Run(c.description, func(t *testing.T) {
+			got := SecondHand(c.time)
+			if !roughlyEqualPoint(got, c.point) {
+				t.Errorf("Got %v, wanted %v", got, c.point)
+			}
 		})
 	}
 }
@@ -71,15 +77,22 @@ func TestSecondsInRadians(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		assertEqual(t, SecondsInRadians(c.time), c.angle)
+		t.Run(testName(c.time), func(t *testing.T) {
+			got := SecondsInRadians(c.time)
+			if got != c.angle {
+				t.Fatalf("Wanted %v radians, but got %v", c.angle, got)
+			}
+		})
 	}
 }
 
-func assertEqual(t testing.TB, got, want interface{}) {
-	t.Helper()
-	if got != want {
-		t.Errorf("Got %v, wanted %v", got, want)
-	}
+func roughlyEqualFloat64(a, b float64) bool {
+	const equalityThreshold = 1e-7
+	return math.Abs(a-b) < equalityThreshold
+}
+
+func roughlyEqualPoint(a, b Point) bool {
+	return roughlyEqualFloat64(a.X, b.X) && roughlyEqualFloat64(a.Y, b.Y)
 }
 
 func simpleTime(hours, minutes, seconds int) time.Time {
