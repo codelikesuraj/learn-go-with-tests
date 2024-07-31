@@ -1,6 +1,8 @@
 package maths
 
 import (
+	"bytes"
+	"encoding/xml"
 	"math"
 	"testing"
 	"time"
@@ -84,6 +86,39 @@ func TestSecondsInRadians(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSVGWriterSecondHand(t *testing.T) {
+	cases := []struct {
+		time time.Time
+		line Line
+	}{
+		{
+			simpleTime(0, 0, 0),
+			Line{150, 150, 150, 60},
+		},
+	}
+
+	for _, c := range cases {
+		b := bytes.Buffer{}
+		SVGWriter(&b, c.time)
+
+		svg := SVG{}
+		xml.Unmarshal(b.Bytes(), &svg)
+
+		if !containsLine(c.line, svg.Line) {
+			t.Errorf("expected to find the second hand line %v in the SVG lines %v", c.line, svg.Line)
+		}
+	}
+}
+
+func containsLine(line Line, lines []Line) bool {
+	for _, l := range lines {
+		if l == line {
+			return true
+		}
+	}
+	return false
 }
 
 func roughlyEqualFloat64(a, b float64) bool {
