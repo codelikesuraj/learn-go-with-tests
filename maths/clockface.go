@@ -37,9 +37,18 @@ type Point struct {
 }
 
 const (
-	CenterX           = 150
-	CenterY           = 150
-	SecondsHandLength = 90
+	CenterX          = 150
+	CenterY          = 150
+	SecondHandLength = 90
+	MinuteHandLength = 80
+	HourHandLength   = 50
+
+	SecondsInHalfClock = 30
+	SecondsInClock     = 2 * SecondsInHalfClock
+	MinutesInHalfClock = 30
+	MinutesInClock     = 2 * MinutesInHalfClock
+	HoursInHalfClock   = 6
+	HoursInClock       = 2 * HoursInHalfClock
 
 	svgStart = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -54,8 +63,19 @@ const (
 )
 
 func SecondHand(tm time.Time) Point {
-	p := SecondHandPoint(tm)
-	p = Point{p.X * SecondsHandLength, p.Y * SecondsHandLength}
+	return makeHand(SecondHandPoint(tm), SecondHandLength)
+}
+
+func MinuteHand(tm time.Time) Point {
+	return makeHand(MinuteHandPoint(tm), MinuteHandLength)
+}
+
+func HourHand(tm time.Time) Point {
+	return makeHand(HourHandPoint(tm), HourHandLength)
+}
+
+func makeHand(p Point, length float64) Point {
+	p = Point{p.X * length, p.Y * length}
 	p = Point{p.X, -p.Y}
 	p = Point{p.X + CenterX, p.Y + CenterY}
 	return p
@@ -65,20 +85,50 @@ func SecondHandSVG(w io.Writer, p Point) {
 	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#f00;stroke-width:3px;"/>`, p.X, p.Y)
 }
 
+func MinuteHandSVG(w io.Writer, p Point) {
+	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#000;stroke-width:3px;"/>`, p.X, p.Y)
+}
+
+func HourHandSVG(w io.Writer, p Point) {
+	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#000;stroke-width:3px;"/>`, p.X, p.Y)
+}
+
 func SecondHandPoint(t time.Time) Point {
-	angle := SecondsInRadians(t)
-	x := math.Sin(angle)
-	y := math.Cos(angle)
-	return Point{x, y}
+	return angleToPoint(SecondsInRadians(t))
+}
+
+func MinuteHandPoint(t time.Time) Point {
+	return angleToPoint(MinutesInRadians(t))
+}
+
+func HourHandPoint(t time.Time) Point {
+	return angleToPoint(HoursInRadians(t))
+}
+
+func angleToPoint(angle float64) Point {
+	return Point{
+		X: math.Sin(angle),
+		Y: math.Cos(angle),
+	}
 }
 
 func SecondsInRadians(t time.Time) float64 {
 	return math.Pi / (30 / float64(t.Second()))
 }
 
+func MinutesInRadians(t time.Time) float64 {
+	return (SecondsInRadians(t) / 60) + math.Pi/(30/float64(t.Minute()))
+}
+
+func HoursInRadians(t time.Time) float64 {
+	return (MinutesInRadians(t) / 12) + (math.Pi / (6 / (float64(t.Hour() % 12))))
+}
+
 func SVGWriter(w io.Writer, t time.Time) {
 	io.WriteString(w, svgStart)
 	io.WriteString(w, svgBezel)
 	SecondHandSVG(w, SecondHand(t))
+	MinuteHandSVG(w, MinuteHand(t))
+	HourHandSVG(w, HourHand(t))
 	io.WriteString(w, svgEnd)
 }
