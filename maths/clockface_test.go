@@ -3,6 +3,7 @@ package maths
 import (
 	"bytes"
 	"encoding/xml"
+	"log"
 	"math"
 	"testing"
 	"time"
@@ -234,12 +235,18 @@ func TestMinutesInRadians(t *testing.T) {
 }
 
 func TestHoursInRadians(t *testing.T) {
+	log.Println(time.Now().Hour())
 	cases := []struct {
 		time  time.Time
 		angle float64
 	}{
-		{simpleTime(6, 0, 0), math.Pi},
 		{simpleTime(0, 0, 0), 0},
+		{simpleTime(3, 0, 0), math.Pi * 0.5},
+		{simpleTime(6, 0, 0), math.Pi},
+		{simpleTime(9, 0, 0), math.Pi * 1.5},
+		{simpleTime(12, 0, 0), 0},
+		{simpleTime(15, 0, 0), math.Pi * 0.5},
+		{simpleTime(18, 0, 0), math.Pi},
 		{simpleTime(21, 0, 0), math.Pi * 1.5},
 		{simpleTime(0, 1, 30), math.Pi / ((6 * 60 * 60) / 90)},
 	}
