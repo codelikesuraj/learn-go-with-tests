@@ -113,18 +113,15 @@ func angleToPoint(angle float64) Point {
 }
 
 func SecondsInRadians(t time.Time) float64 {
-	return math.Pi * (float64(t.Second()) / 30)
+	return math.Pi * (float64(t.Second()) / SecondsInHalfClock)
 }
 
 func MinutesInRadians(t time.Time) float64 {
-	return (SecondsInRadians(t) / 60) + (math.Pi * (float64(t.Minute()) / 30))
+	return (SecondsInRadians(t) / SecondsInClock) + (math.Pi * (float64(t.Minute()) / MinutesInHalfClock))
 }
 
 func HoursInRadians(t time.Time) float64 {
-	// return (MinutesInRadians(t) / 12) + (math.Pi / (6 / (float64(t.Hour() % 12))))
-	// return (MinutesInRadians(t) / 12) + (math.Pi * ((float64(t.Hour() % 12) / 6)))
-	return (MinutesInRadians(t) / 12) + (math.Pi * ((float64(t.Hour() % 12) / 6)))
-	// return math.Pi * (float64(t.Hour()) / 6)
+	return (MinutesInRadians(t) / HoursInClock) + (math.Pi * (float64(t.Hour()%HoursInClock) / HoursInHalfClock))
 }
 
 func SVGWriter(w io.Writer, t time.Time) {
