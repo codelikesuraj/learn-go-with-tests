@@ -113,11 +113,12 @@ func angleToPoint(angle float64) Point {
 }
 
 func SecondsInRadians(t time.Time) float64 {
-	return math.Pi / (30 / float64(t.Second()))
+	// return math.Pi / (30 / float64(t.Second()))
+	return math.Pi * (float64(t.Second()) / 30)
 }
 
 func MinutesInRadians(t time.Time) float64 {
-	return (SecondsInRadians(t) / 60) + math.Pi/(30/float64(t.Minute()))
+	return (SecondsInRadians(t) / 60) + (math.Pi * (float64(t.Minute()) / 30))
 }
 
 func HoursInRadians(t time.Time) float64 {

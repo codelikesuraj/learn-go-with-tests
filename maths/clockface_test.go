@@ -190,10 +190,10 @@ func TestSecondsInRadians(t *testing.T) {
 		time  time.Time
 		angle float64
 	}{
-		{simpleTime(0, 0, 30), math.Pi},
 		{simpleTime(0, 0, 0), 0},
-		{simpleTime(0, 0, 45), (math.Pi / 2) * 3},
-		{simpleTime(0, 0, 7), (math.Pi / 30) * 7},
+		{simpleTime(0, 0, 15), (math.Pi / 30) * 15},
+		{simpleTime(0, 0, 30), math.Pi},
+		{simpleTime(0, 0, 45), (math.Pi / 30) * 45},
 	}
 
 	for _, c := range cases {
@@ -211,14 +211,22 @@ func TestMinutesInRadians(t *testing.T) {
 		time  time.Time
 		angle float64
 	}{
-		{simpleTime(0, 30, 0), math.Pi},
+		{simpleTime(0, 0, 0), 0},
+		{simpleTime(0, 0, 15), (math.Pi / (30 * 60)) * 15},
+		{simpleTime(0, 0, 30), math.Pi / 60},
+		{simpleTime(0, 0, 45), (math.Pi / (30 * 60)) * 45},
+
 		{simpleTime(0, 0, 7), 7 * (math.Pi / (30 * 60))},
+
+		{simpleTime(0, 15, 0), (math.Pi / 30) * 15},
+		{simpleTime(0, 30, 0), math.Pi},
+		{simpleTime(0, 45, 0), (math.Pi / 30) * 45},
 	}
 
 	for _, c := range cases {
 		t.Run(testName(c.time), func(t *testing.T) {
 			got := MinutesInRadians(c.time)
-			if got != c.angle {
+			if !roughlyEqualFloat64(got, c.angle) {
 				t.Fatalf("Wanted %v radians, but got %v", c.angle, got)
 			}
 		})
