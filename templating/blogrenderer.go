@@ -10,6 +10,9 @@ import (
 	"io"
 	"io/fs"
 	"strings"
+
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/parser"
 )
 
 const (
@@ -30,13 +33,20 @@ type Post struct {
 	Body        string
 }
 
-type PostViewModel struct {
-	Title, SanitisedTitle, Description, Body string
-	Tags                                     []string
+type postViewModel struct {
+	Post
+	HTMLBody template.HTML
 }
 
 type PostRenderer struct {
-	templ *template.Template
+	templ    *template.Template
+	mdParser *parser.Parser
+}
+
+func newPostVM(p Post, r *PostRenderer) postViewModel {
+	vm := postViewModel{Post: p}
+	vm.HTMLBody = template.HTML(markdown.ToHTML([]byte(p.Body), r.mdParser, nil))
+	return vm
 }
 
 func (p Post) SanitisedTitle() string {
@@ -48,7 +58,10 @@ func NewPostRenderer() (*PostRenderer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PostRenderer{templ: templ}, nil
+
+	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
+
+	return &PostRenderer{templ: templ, mdParser: parser}, nil
 }
 
 type StubFailingFS struct{}
@@ -116,7 +129,7 @@ func readBody(scanner *bufio.Scanner) string {
 }
 
 func (r *PostRenderer) Render(w io.Writer, post Post) error {
-	return r.templ.ExecuteTemplate(w, "blog.gohtml", post)
+	return r.templ.ExecuteTemplate(w, "blog.gohtml", newPostVM(post, r))
 }
 
 func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
