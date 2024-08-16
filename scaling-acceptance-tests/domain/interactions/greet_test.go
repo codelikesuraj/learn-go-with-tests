@@ -1,4 +1,4 @@
-package scaling_acceptance_tests
+package interactions
 
 import (
 	"testing"
