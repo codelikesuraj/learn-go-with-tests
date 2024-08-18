@@ -19,6 +19,7 @@ func StartDockerServer(t testing.TB, exposedPort, dockerFilePath string) (url st
 		FromDockerfile: testcontainers.FromDockerfile{
 			Context:       "../../.",
 			Dockerfile:    dockerFilePath,
+			KeepImage:     true,
 			PrintBuildLog: true,
 		},
 		ExposedPorts: []string{exposedPort},

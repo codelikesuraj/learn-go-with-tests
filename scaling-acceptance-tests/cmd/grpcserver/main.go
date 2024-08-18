@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println("Implement man")
+	fmt.Println("implement me")
 }
