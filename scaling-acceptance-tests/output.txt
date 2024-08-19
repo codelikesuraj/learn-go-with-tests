@@ -1,0 +1,121 @@
+?   	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/adapters	[no test files]
+?   	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/adapters/grpcserver	[no test files]
+?   	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/adapters/httpserver	[no test files]
+?   	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/specifications	[no test files]
+=== RUN   TestGreeterServer
+2024/08/19 21:02:07 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.1.2
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.4 LTS
+  Total Memory: 15239 MB
+  Testcontainers for Go Version: v0.32.0
+  Resolved Docker Host: unix:///var/run/docker.sock
+  Resolved Docker Socket Path: /var/run/docker.sock
+  Test SessionID: 2663773d6bd3761f609faf3efb4deeaca19acd769a35d341ff03c4a582d4297a
+  Test ProcessID: ee923714-d51d-45a3-ad64-94e2a37276e4
+2024/08/19 21:02:07 🐳 Creating container for image testcontainers/ryuk:0.7.0
+2024/08/19 21:02:07 🔥 Reaper obtained from Docker for this test session 54352844df9a8bd00729041a9d08e90d952daff3917efce40e40114ad9d44d21
+2024/08/19 21:02:07 ⏳ Waiting for Reaper port to be ready
+Step 1/9 : FROM golang:1.22-alpine
+ ---> 015e592df15e
+Step 2/9 : ARG bin_to_build
+ ---> Using cache
+ ---> 29eaa338ad9f
+Step 3/9 : WORKDIR /app
+ ---> Using cache
+ ---> 35a077009524
+Step 4/9 : COPY go.mod ./
+ ---> Using cache
+ ---> a925af34fdb7
+Step 5/9 : RUN go mod download
+ ---> Using cache
+ ---> ddbca433f2e3
+Step 6/9 : COPY . .
+ ---> 294a7bb1ba7c
+Step 7/9 : RUN go build -o svr cmd/${bin_to_build}/*.go
+ ---> Running in 8868dd1bdf57
+ ---> Removed intermediate container 8868dd1bdf57
+ ---> 58508fc71cd5
+Step 8/9 : EXPOSE 8080
+ ---> Running in 624dcd9675ec
+ ---> Removed intermediate container 624dcd9675ec
+ ---> 10e6e232afd3
+Step 9/9 : CMD [ "./svr" ]
+ ---> Running in f44158d2d793
+ ---> Removed intermediate container f44158d2d793
+ ---> d2b0452e98f4
+Successfully built d2b0452e98f4
+Successfully tagged 3f635ac5-9872-4aac-ac51-5e7a79217f01:56f7e6a9-133c-4fb8-b4d5-529df8efd878
+2024/08/19 21:02:38 🐳 Creating container for image 
+2024/08/19 21:02:38 ✅ Container created: b0dccfa9e85f
+2024/08/19 21:02:38 🐳 Starting container: b0dccfa9e85f
+2024/08/19 21:02:38 ✅ Container started: b0dccfa9e85f
+2024/08/19 21:02:38 ⏳ Waiting for container id b0dccfa9e85f image: 3f635ac5-9872-4aac-ac51-5e7a79217f01:56f7e6a9-133c-4fb8-b4d5-529df8efd878. Waiting for: &{Port:50051 timeout:0xc00023d1a8 PollInterval:100ms}
+2024/08/19 21:02:38 🔔 Container is ready: b0dccfa9e85f
+2024/08/19 21:02:38 🐳 Terminating container: b0dccfa9e85f
+2024/08/19 21:02:38 🚫 Container terminated: b0dccfa9e85f
+--- PASS: TestGreeterServer (31.79s)
+PASS
+ok  	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/cmd/grpcserver	31.842s
+=== RUN   TestGreeterServer
+2024/08/19 21:02:07 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 27.1.2
+  API Version: 1.46
+  Operating System: Ubuntu 22.04.4 LTS
+  Total Memory: 15239 MB
+  Testcontainers for Go Version: v0.32.0
+  Resolved Docker Host: unix:///var/run/docker.sock
+  Resolved Docker Socket Path: /var/run/docker.sock
+  Test SessionID: 2663773d6bd3761f609faf3efb4deeaca19acd769a35d341ff03c4a582d4297a
+  Test ProcessID: bab7fcfd-5271-4cb1-aedf-06e44f9a8326
+2024/08/19 21:02:07 🐳 Creating container for image testcontainers/ryuk:0.7.0
+2024/08/19 21:02:07 ✅ Container created: 54352844df9a
+2024/08/19 21:02:07 🐳 Starting container: 54352844df9a
+2024/08/19 21:02:07 ✅ Container started: 54352844df9a
+2024/08/19 21:02:07 ⏳ Waiting for container id 54352844df9a image: testcontainers/ryuk:0.7.0. Waiting for: &{Port:8080/tcp timeout:<nil> PollInterval:100ms}
+2024/08/19 21:02:07 🔔 Container is ready: 54352844df9a
+Step 1/9 : FROM golang:1.22-alpine
+ ---> 015e592df15e
+Step 2/9 : ARG bin_to_build
+ ---> Using cache
+ ---> 29eaa338ad9f
+Step 3/9 : WORKDIR /app
+ ---> Using cache
+ ---> 35a077009524
+Step 4/9 : COPY go.mod ./
+ ---> Using cache
+ ---> a925af34fdb7
+Step 5/9 : RUN go mod download
+ ---> Using cache
+ ---> 230cf3e71fd4
+Step 6/9 : COPY . .
+ ---> d3fb9bc73f15
+Step 7/9 : RUN go build -o svr cmd/${bin_to_build}/*.go
+ ---> Running in 0237bfb3e888
+ ---> Removed intermediate container 0237bfb3e888
+ ---> f84eeea4e541
+Step 8/9 : EXPOSE 8080
+ ---> Running in 64e06de3fa6a
+ ---> Removed intermediate container 64e06de3fa6a
+ ---> 69fb1fc49603
+Step 9/9 : CMD [ "./svr" ]
+ ---> Running in f8148f319f6d
+ ---> Removed intermediate container f8148f319f6d
+ ---> b0bdd40c632d
+Successfully built b0bdd40c632d
+Successfully tagged c34ca8a3-4a12-4bb5-9a5c-cb051efff7c6:a6aa8477-b5f0-431c-97d9-a466261f9058
+2024/08/19 21:02:32 🐳 Creating container for image 
+2024/08/19 21:02:32 ✅ Container created: a992a39ce6e3
+2024/08/19 21:02:32 🐳 Starting container: a992a39ce6e3
+2024/08/19 21:02:32 ✅ Container started: a992a39ce6e3
+2024/08/19 21:02:32 ⏳ Waiting for container id a992a39ce6e3 image: c34ca8a3-4a12-4bb5-9a5c-cb051efff7c6:a6aa8477-b5f0-431c-97d9-a466261f9058. Waiting for: &{Port:8080 timeout:0xc000015240 PollInterval:100ms}
+2024/08/19 21:02:32 🔔 Container is ready: a992a39ce6e3
+2024/08/19 21:02:32 🐳 Terminating container: a992a39ce6e3
+2024/08/19 21:02:33 🚫 Container terminated: a992a39ce6e3
+--- PASS: TestGreeterServer (26.30s)
+PASS
+ok  	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/cmd/httpserver	26.357s
+=== RUN   TestGreet
+--- PASS: TestGreet (0.00s)
+PASS
+ok  	github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/domain/interactions	0.003s
