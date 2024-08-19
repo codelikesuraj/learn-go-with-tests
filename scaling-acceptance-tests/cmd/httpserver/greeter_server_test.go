@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -11,9 +12,9 @@ import (
 )
 
 func TestGreeterServer(t *testing.T) {
-	baseURL := adapters.StartDockerServer(t, "8080", "./cmd/httpserver/Dockerfile")
+	host, port := adapters.StartDockerServer(t, "8080", "./cmd/httpserver/Dockerfile")
 	driver := httpserver.Driver{
-		BaseURL: baseURL,
+		BaseURL: fmt.Sprintf("http://%s:%s", host, port),
 		Client:  &http.Client{Timeout: 1 * time.Second},
 	}
 

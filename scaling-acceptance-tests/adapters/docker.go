@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -12,9 +11,9 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func StartDockerServer(t testing.TB, exposedPort, dockerFilePath string) (url string) {
+func StartDockerServer(t testing.TB, exposedPort, dockerFilePath string) (host, port string) {
 	ctx := context.Background()
-
+	t.Helper()
 	req := testcontainers.ContainerRequest{
 		FromDockerfile: testcontainers.FromDockerfile{
 			Context:       "../../.",
@@ -32,13 +31,12 @@ func StartDockerServer(t testing.TB, exposedPort, dockerFilePath string) (url st
 	})
 	assert.NoError(t, err)
 
-	ip, err := container.Host(ctx)
+	host, err = container.Host(ctx)
 	assert.NoError(t, err)
 
-	port, err := container.MappedPort(ctx, nat.Port(exposedPort))
+	mappedPort, err := container.MappedPort(ctx, nat.Port(exposedPort))
 	assert.NoError(t, err)
-
-	url = fmt.Sprintf("http://%s:%s", ip, port.Port())
+	port = mappedPort.Port()
 
 	t.Cleanup(func() {
 		assert.NoError(t, container.Terminate(ctx))

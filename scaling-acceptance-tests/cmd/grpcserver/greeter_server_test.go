@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/codelikesuraj/learn-go-with-tests/scaling-acceptance-tests/adapters"
@@ -9,10 +10,10 @@ import (
 )
 
 func TestGreeterServer(t *testing.T) {
-	baseURL := adapters.StartDockerServer(t, "8080", "./cmd/grpcserver/Dockerfile")
+	host, port := adapters.StartDockerServer(t, "50051", "./cmd/grpcserver/Dockerfile")
 	driver := grpcserver.Driver{
-		Addr: baseURL,
+		Addr: fmt.Sprintf("%s:%s", host, port),
 	}
 
-	specifications.GreetSpecification(t, driver)
+	specifications.GreetSpecification(t, &driver)
 }
